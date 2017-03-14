@@ -1,7 +1,9 @@
 package kissybnts.learning.rxjava
 
 import io.reactivex.*
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.internal.operators.flowable.FlowableOnBackpressureError
 import io.reactivex.schedulers.Schedulers
 import org.reactivestreams.Subscriber
 import org.reactivestreams.Subscription
@@ -93,5 +95,31 @@ internal class Part1 {
                     }
                 })
         Thread.sleep(2000)
+    }
+
+    fun list29() {
+        val compositeDisposable = CompositeDisposable()
+
+        compositeDisposable.add(Flowable.range(1, 3)
+                .doOnCancel {
+                    println("No1 canceled")
+                }
+                .observeOn(Schedulers.computation())
+                .subscribe {
+                    Thread.sleep(100)
+                    println("No1: $it")
+                })
+
+        compositeDisposable.add(Flowable.range(1, 3)
+                .doOnCancel { println("No2 canceled") }
+                .observeOn(Schedulers.computation())
+                .subscribe {
+                    Thread.sleep(100)
+                    println("No2: $it")
+                })
+
+        Thread.sleep(150)
+
+        compositeDisposable.dispose()
     }
 }

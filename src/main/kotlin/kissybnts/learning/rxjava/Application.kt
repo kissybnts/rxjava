@@ -7,6 +7,7 @@ class Application {
             val part1 = Part1()
             part1.list11()
             part1.list18()
+            part1.list29()
         }
     }
 
